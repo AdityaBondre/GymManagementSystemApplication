@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gym Management</title>
     <style>
-        /* Reset and base styles */
+    /* Reset and base styles */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -235,7 +235,9 @@
             padding: 20px 0;
             text-align: center;
         }
-    </style>
+        </style>
+
+  
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </head>
 <body>

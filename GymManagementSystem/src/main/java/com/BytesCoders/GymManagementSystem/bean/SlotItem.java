@@ -13,6 +13,12 @@ public class SlotItem {
 			super();
 			seatBooked=0;
 		}
+	    public SlotItem(SlotItemEmbed embeddedId) {
+	    	super();
+	    	this.embeddedId = embeddedId;
+			this.seatBooked = 0;
+	    	
+	    }
 		public SlotItem(SlotItemEmbed embeddedId, Integer seatBooked) {
 			super();
 			this.embeddedId = embeddedId;
