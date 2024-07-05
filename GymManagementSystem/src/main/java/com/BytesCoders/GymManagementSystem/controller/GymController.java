@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.BytesCoders.GymManagementSystem.bean.GymItem;
+import com.BytesCoders.GymManagementSystem.bean.Item;
 import com.BytesCoders.GymManagementSystem.bean.Slot;
 import com.BytesCoders.GymManagementSystem.bean.SlotItem;
 import com.BytesCoders.GymManagementSystem.bean.SlotItemEmbed;
 import com.BytesCoders.GymManagementSystem.dao.GymItemDao;
 import com.BytesCoders.GymManagementSystem.dao.SlotDao;
 import com.BytesCoders.GymManagementSystem.dao.SlotItemDao;
+import com.BytesCoders.GymManagementSystem.service.GymItemService;
+import com.BytesCoders.GymManagementSystem.service.GymUserService;
 
 @RestController
 public class GymController {
@@ -30,9 +33,21 @@ public class GymController {
 	@Autowired
 	private SlotItemDao slotItemDao;
 	
+	@Autowired
+	private GymItemService itemService;
+	
+	@Autowired
+	private GymUserService userService;
+	
 	@GetMapping("/index")
 	public ModelAndView showIndexPage() {
-		return new ModelAndView("index");
+		String indexPage="";
+		String userType=userService.getType();
+		if (userType.equalsIgnoreCase ("Admin")) 
+			indexPage="index1";
+		else if (userType.equalsIgnoreCase ("Customer"))
+		    indexPage="index2";
+		return new ModelAndView(indexPage);
 	}
 	
 	@GetMapping ("/gymitem")
@@ -48,7 +63,7 @@ public class GymController {
 	@PostMapping ("/gymitem")
 	public ModelAndView saveItem (@ModelAttribute("itemRecord") GymItem gymItem) { 
 		gymItemDao.saveNewItem (gymItem);
-	return new ModelAndView("index");
+		return new ModelAndView("redirect:/index");
 	}
 	@GetMapping ("/gymitems")
 	public ModelAndView showItemReportPage() {
@@ -76,7 +91,7 @@ public class GymController {
     	SlotItem slotItem = new SlotItem(embed);
 		slotItemDao.save(slotItem);
     }
-    return new ModelAndView("index");
+    return new ModelAndView("redirect:/index");
     }
     @GetMapping("/slots")
     public ModelAndView showSlotReportPage() {
@@ -86,14 +101,18 @@ public class GymController {
     return mv;
     }
     @GetMapping("/slot-show/{id}")
-    public ModelAndView showSlotEnquirePage(@PathVariable Long id) {
+    public ModelAndView showSlotBookPage(@PathVariable Long id) {
     	Slot slot = slotDao.findSlotById(id);
-    	List<GymItem> itemList=gymItemDao.displayAllItems();
+    	List<Item> itemList=itemService.getItemsList(id);
     	ModelAndView mv=new ModelAndView("slotBookPage");
     	mv.addObject("slot",slot);
     	mv.addObject("itemList",itemList);
-    	itemList.forEach(item->System.out.println(item));
     	return mv;
     	
+    }
+    @GetMapping("/slot-item-add/{id}")
+    public ModelAndView saveItemSlots(@PathVariable Long id) {
+      itemService.addNewItemToSlots(id);   
+      return new ModelAndView("redirect:/index");
     }
 }
