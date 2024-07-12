@@ -204,10 +204,30 @@
                 <div class="card">
                     <h2>View Slots</h2>
                     <div class="sub-navbar">
-                        <a href="/slots">View Slots</a>
+                        <a href="/slots">View Slots & Book</a>
                     </div>
-                    <p>View and manage existing gym slots.</p>
+                    <p>View, book and manage existing gym slots.</p>
                     <!-- Add slot viewing functionality here -->
+                </div>
+            </div>
+            <div class="flex-item">
+                <div class="card">
+                    <h2>Booking Report</h2>
+                    <div class="sub-navbar">
+                        <a href="/bookings">View Report</a>
+                    </div>
+                    <p>View detailed booking reports.</p>
+                    <!-- Add booking report functionality here -->
+                </div>
+            </div>
+            <div class="flex-item">
+                <div class="card">
+                    <h2>Booking Cancellation</h2>
+                    <div class="sub-navbar">
+                        <a href="/cancel-bookings">Cancel Booking</a>
+                    </div>
+                    <p>Cancel existing bookings.</p>
+                    <!-- Add booking cancellation functionality here -->
                 </div>
             </div>
         </div>
@@ -227,4 +247,4 @@
 
 </body>
 </html>
-  
+ 

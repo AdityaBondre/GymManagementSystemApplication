@@ -126,8 +126,9 @@ tr:hover {
     </div>
     <hr/>
     <div align="center">
-        <form action="yourActionURL" method="post">
+        <form action="/slot-book" method="post">
             <input type="hidden" value="${slot.slotId}" name="slot_id"/>
+            <input type="hidden" name="username" value="${gymUser.username}"/>
             <table>
                 <tr>
                     <th>Item No</th>
@@ -143,7 +144,7 @@ tr:hover {
                         <td>${item.totalSeat}</td>
                         <td>${item.seatVacant}</td>
                         
-                        <td><input name="selectitem" type="radio" value="${item.itemId}"/></td>
+                        <td><input name="selectItem" type="radio" value="${item.itemId}"/></td>
                     </tr> 
                 </c:forEach>
             </table>

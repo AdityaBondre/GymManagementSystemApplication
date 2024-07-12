@@ -30,5 +30,10 @@ public class SlotItemDaoImpl implements  SlotItemDao  {
 		
 		return repository.findAllEmbeds();
 	}
+	@Override
+	public SlotItem findById(SlotItemEmbed id) {
+		// TODO Auto-generated method stub
+		return repository.findById(id).get();
+	}
 
 }

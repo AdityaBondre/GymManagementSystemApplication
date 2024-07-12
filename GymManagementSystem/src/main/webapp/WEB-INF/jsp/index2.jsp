@@ -254,7 +254,10 @@
             <a href="#slot">Slot Booking</a>
             <div class="dropdown-content">
               
-                <a href="/slots">View Slot</a>
+                <a href="/slots">Book Slot</a>
+                <a href="/bookings">View Booked Slot</a>
+                <a href="/cancel-bookings">Cancel Booking</a>
+                
             </div>
         </div>
        
