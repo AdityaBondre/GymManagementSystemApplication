@@ -1,9 +1,10 @@
 package com.BytesCoders.GymManagementSystem.exception;
 
-public class SeatNotAvailableException extends RuntimeException {
+public class DuplicateBookingException extends RuntimeException{
 	private static final long serialVersionUID=1L;
-	
-	public SeatNotAvailableException(String message) {
+	public DuplicateBookingException(String message) {
         super(message);
     }
+
+
 }

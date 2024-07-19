@@ -1,11 +1,14 @@
 package com.BytesCoders.GymManagementSystem.controller;
 
+
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +28,7 @@ import com.BytesCoders.GymManagementSystem.dao.GymItemDao;
 import com.BytesCoders.GymManagementSystem.dao.SlotDao;
 import com.BytesCoders.GymManagementSystem.dao.SlotItemDao;
 import com.BytesCoders.GymManagementSystem.exception.SeatNotAvailableException;
+import com.BytesCoders.GymManagementSystem.exception.DuplicateBookingException;
 import com.BytesCoders.GymManagementSystem.service.GymItemService;
 import com.BytesCoders.GymManagementSystem.service.GymUserService;
 
@@ -138,28 +142,24 @@ public class GymController {
 //    	itemList.forEach(item->System.out.println(item));
     	return mv;
     }
-    @PostMapping("/slot-book")
+  
+  /*  @PostMapping("/slot-book")
     public ModelAndView saveSlotBookPage(
         @RequestParam("slot_id") Long slotId,
         @RequestParam("selectItem") Long itemId,
         @RequestParam("username") String username,
         @ModelAttribute("gymBookRecord") GymBook gymBook) {
-    	
-    	  // System.out.println("slotId: " + slotId);
-    	    //System.out.println("itemId: " + itemId);
-    	    //System.out.println("userId: " + username);
         
         String userType = userService.getType();
         String bookingUserName = "";
 
         if ("Admin".equalsIgnoreCase(userType)) {
-            
-        	bookingUserName = username; 
+            bookingUserName = username;
         } else if ("Customer".equalsIgnoreCase(userType)) {
-            
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             bookingUserName = authentication.getName();
         }
+
         GymItem gymItem = gymItemDao.findItemById(itemId);
         SlotItemEmbed embed = new SlotItemEmbed(slotId, itemId);
         int totalSeat = gymItem.getTotalSeat();
@@ -167,23 +167,102 @@ public class GymController {
         int seatBooked = slotItemDao.findSeatBookedById(embed);
         int available = totalSeat - seatBooked;
 
-        gymBook.setSlotId(slotId);
-        gymBook.setItemId(itemId);
-        gymBook.setUsername(bookingUserName);
-        gymBookDao.save(gymBook);
-       
-
+        // Check if there are available seats
         if (available > 0) {
+            gymBook.setSlotId(slotId);
+            gymBook.setItemId(itemId);
+            gymBook.setUsername(bookingUserName);
+            gymBookDao.save(gymBook);
+
+            // Book the seat
             seatBooked++;
             slotItem.setSeatBooked(seatBooked);
             slotItemDao.save(slotItem);
-        } else {
-            throw new SeatNotAvailableException();
-        }
-        Long bookingId = gymBook.getBookingId();
-        return new ModelAndView("redirect:/booking-card/"+bookingId);
-    }
 
+            Long bookingId = gymBook.getBookingId();
+            return new ModelAndView("redirect:/booking-card/" + bookingId);
+        } else {
+            // Throw exception if no seats are available
+            throw new SeatNotAvailableException(bookingUserName);
+        }
+    }
+*/
+    
+    @PostMapping("/slot-book")
+    public ModelAndView saveSlotBookPage(
+        @RequestParam("slot_id") Long slotId,
+        @RequestParam("selectItem") Long itemId,
+        @RequestParam("username") String username,
+        @ModelAttribute("gymBookRecord") GymBook gymBook) {
+        
+        String userType = userService.getType();
+        String bookingUserName = "";
+
+        if ("Admin".equalsIgnoreCase(userType)) {
+            bookingUserName = username;
+        } else if ("Customer".equalsIgnoreCase(userType)) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            bookingUserName = authentication.getName();
+        }
+
+        GymItem gymItem = gymItemDao.findItemById(itemId);
+        SlotItemEmbed embed = new SlotItemEmbed(slotId, itemId);
+        int totalSeat = gymItem.getTotalSeat();
+        SlotItem slotItem = slotItemDao.findById(embed);
+        int seatBooked = slotItemDao.findSeatBookedById(embed);
+        int available = totalSeat - seatBooked;
+
+        // Check if the user has already booked this slot
+        GymBook existingBooking = gymBookDao.findBySlotIdAndUsername(slotId, bookingUserName);
+        if (existingBooking != null) {
+            throw new DuplicateBookingException(bookingUserName);
+        }
+
+        // Check if there are available seats
+        if (available > 0) {
+            gymBook.setSlotId(slotId);
+            gymBook.setItemId(itemId);
+            gymBook.setUsername(bookingUserName);
+            gymBookDao.save(gymBook);
+
+            // Book the seat
+            seatBooked++;
+            slotItem.setSeatBooked(seatBooked);
+            slotItemDao.save(slotItem);
+
+            Long bookingId = gymBook.getBookingId();
+            return new ModelAndView("redirect:/booking-card/" + bookingId);
+        } else {
+            // Throw exception if no seats are available
+            throw new SeatNotAvailableException(bookingUserName);
+        }
+    }
+    @ExceptionHandler(DuplicateBookingException.class)
+    public ModelAndView handleSeatNotAvailableException(DuplicateBookingException ex) {
+        ModelAndView mv = new ModelAndView("error");
+        mv.addObject("errorMessage", "YOU CAN'T BOOK SLOT TWICE: " + ex.getMessage());
+        return mv;
+    }
+    
+    
+
+
+    @ExceptionHandler(SeatNotAvailableException.class)
+    public ModelAndView handleSeatNotAvailableException(SeatNotAvailableException ex) {
+        ModelAndView mv = new ModelAndView("error");
+        mv.addObject("errorMessage", "Seat not available: " + ex.getMessage());
+        return mv;
+    }
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleAllExceptions(Exception ex) {
+        ModelAndView mv = new ModelAndView("error");
+        mv.addObject("errorMessage", "An unexpected error occurred: " + ex.getMessage());
+        return mv;
+    }
+    
+    
+    
+    
     @GetMapping("/booking-card/{id}")
     public ModelAndView showBookingCardPage(@PathVariable Long id) {
         GymBook booking = gymBookDao.findBookInfoById(id);
@@ -208,7 +287,7 @@ public class GymController {
         mv.addObject("bookingList", bookingList);
         return mv;
     }
-    @GetMapping("/bookings")
+  @GetMapping("/bookings")
     public ModelAndView showAllBookings() {
     	String username="";
     	String userType=userService.getType();
@@ -224,24 +303,65 @@ public class GymController {
         mv.addObject("bookingList", bookingList);
         return mv;
     }
-    @PostMapping("/booked")
-    public ModelAndView cancelBooking(@RequestParam("slot_id") Long slotId,
-                                      @RequestParam("item_id") Long itemId,
-                                      @RequestParam("selectBookingId") Long bookingId) {
-        SlotItemEmbed embed = new SlotItemEmbed(slotId, itemId);
-        SlotItem slotItem = slotItemDao.findById(embed);
-        if (slotItem != null) {
-            int seatBooked = slotItem.getSeatBooked();
-            if (seatBooked > 0) {
-                seatBooked--;
-                slotItem.setSeatBooked(seatBooked);
-                slotItemDao.save(slotItem);
-                gymBookDao.deleteById(bookingId);
-            }
+  /*  @GetMapping("/bookings")
+    public ModelAndView showAllBookings() {
+        String username = "";
+        String userType = userService.getType();
+        List<GymBook> bookingList;
+
+        if (userType.equalsIgnoreCase("Customer")) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            username = authentication.getName();
+            bookingList = gymBookDao.getEntitiesByUsername(username);
+        } else {
+            bookingList = gymBookDao.getBookList();
         }
-        ModelAndView mv = new ModelAndView("redirect:/index");
+
+        ModelAndView mv = new ModelAndView("gymBookReportPage");
+        mv.addObject("bookingList", bookingList);
         return mv;
     }
+
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleAllExceptions(Exception ex) {
+        ModelAndView mv = new ModelAndView("error");
+        mv.addObject("errorMessage", "An unexpected error occurred: " + ex.getMessage());
+        return mv;
+    }
+    */
+
+
+   
+
+   
+   
+
+     
+    
+    
+    
+    
+    
+    
+    
+  @PostMapping("/booked")
+  public ModelAndView cancelBooking(@RequestParam("slot_id") Long slotId,
+                                    @RequestParam("item_id") Long itemId,
+                                    @RequestParam("selectBookingId") Long bookingId) {
+      SlotItemEmbed embed = new SlotItemEmbed(slotId, itemId);
+      SlotItem slotItem = slotItemDao.findById(embed);
+      if (slotItem != null) {
+          int seatBooked = slotItem.getSeatBooked();
+          if (seatBooked > 0) {
+              seatBooked--;
+              slotItem.setSeatBooked(seatBooked);
+              slotItemDao.save(slotItem);
+              gymBookDao.deleteById(bookingId);
+          }
+      }
+      return new ModelAndView("redirect:/index");
+  }
+
 
     @GetMapping("/slot-item-add/{id}")
     public ModelAndView saveItemSlots(@PathVariable Long id) {

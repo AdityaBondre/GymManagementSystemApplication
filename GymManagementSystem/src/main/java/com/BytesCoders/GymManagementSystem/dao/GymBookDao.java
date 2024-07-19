@@ -13,6 +13,8 @@ public interface GymBookDao {
 	public GymBook findBookInfoById(Long id);
 	public void deleteById(Long id);
 	public List<GymBook> getEntitiesByUsername(String username);
+	public GymBook findBySlotIdAndUsername(Long slotId, String bookingUserName);
+	 
 	
 
 	

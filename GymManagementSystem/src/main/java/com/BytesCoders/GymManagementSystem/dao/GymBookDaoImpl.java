@@ -54,6 +54,11 @@ public class GymBookDaoImpl implements GymBookDao {
 	    public List<GymBook> getEntitiesByUsername(String username) {
 	        return repository.findByUsername(username); // Assuming findByUsername is defined in GymBookRepository
 	    }
+	
+	 @Override
+	    public GymBook findBySlotIdAndUsername(Long slotId, String username) {
+	        return repository.findBySlotIdAndUsername(slotId, username);
+	    }
 
 	
 	
