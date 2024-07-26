@@ -46,4 +46,10 @@ public class SlotDaoImpl implements SlotDao {
     
 		
 	}
+
+	@Override
+	public void updateSlot(Slot slot) {
+		repository.save(slot);
+		
+	}
 }

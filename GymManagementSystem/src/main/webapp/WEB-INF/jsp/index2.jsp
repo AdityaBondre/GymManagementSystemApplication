@@ -264,6 +264,7 @@
         <a href="#pricing">Pricing</a>
         <a href="#about">About</a>
         <a href="#contact">Contact</a>
+        <a href="/feedback">FeedBack</a>
         <a href="#logout" onclick="logout()">Logout</a>
     </div>
 </div>
@@ -347,7 +348,7 @@
 </section>
 
 <!-- Feedback Section -->
-<section id="feedback">
+<!-- <section id="feedback">
     <div class="container">
         <h2>Feedback</h2>
         <p>We'd love to hear your feedback! Please share your thoughts with us:</p>
@@ -360,7 +361,7 @@
             </form>
         </div>
     </div>
-</section>
+</section> -->
 
 <!-- Footer Section -->
 <footer>

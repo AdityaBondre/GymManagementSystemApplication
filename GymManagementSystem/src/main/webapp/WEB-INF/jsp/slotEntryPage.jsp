@@ -14,14 +14,27 @@
         margin: 0;
         padding: 0;
     }
+    header {
+    background: #333;
+    color: #fff;
+    padding: 20px 0;
+    width: 100%;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+header h1 {
+    margin: 0;
+}
     .container {
-        max-width: 600px;
-        margin: 50px auto;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-    }
+    width: 50%;
+    margin: 100px auto 50px; /* Adjusted margin to accommodate fixed header */
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
     h3 {
         text-align: center;
         color: #333;
@@ -83,6 +96,9 @@
 </style>
 </head>
 <body>
+<header>
+    <h1>GYM Management System</h1>
+</header>
 <div class="container">
     <h3>Add Slots</h3>
     <form:form action="/slot" method="post" modelAttribute="slotRecord">

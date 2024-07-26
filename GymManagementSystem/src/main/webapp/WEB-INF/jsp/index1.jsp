@@ -149,8 +149,10 @@
 <!-- Sidebar Section -->
 <div class="sidebar">
     <a href="#dashboard">Dashboard</a>
+    <a href="#manage-user">Manage Gym User</a>
     <a href="#manage-items">Manage Gym Item</a>
     <a href="#manage-slots">Manage Slot</a>
+    <a href="#feedback">Feedback</a>
     <a href="#logout" onclick="logout()">Logout</a>
 </div>
 
@@ -160,6 +162,21 @@
         <h1>Dashboard</h1>
         <div class="card">
             <img src="/image/image101.jpeg" alt="Dashboard Image">
+        </div>
+    </section>
+    <section id="manage-user">
+        <h1>Manage Gym User</h1>
+        <div class="flex-container">
+            <div class="flex-item">
+                <div class="card">
+                    <h2>View And Delete User</h2>
+                    <div class="sub-navbar">
+                        <a href="/users">View User</a>
+                    </div>
+                    <p>View and manage existing Gym Users.</p>
+                    <!-- Add user management functionality here -->
+                </div>
+            </div>
         </div>
     </section>
     <section id="manage-items">
@@ -177,9 +194,9 @@
             </div>
             <div class="flex-item">
                 <div class="card">
-                    <h2>View Gym Items</h2>
+                    <h2>View & Edit Gym Items</h2>
                     <div class="sub-navbar">
-                        <a href="/gymitems">View Items</a>
+                        <a href="/gymitems">View & Edit Items</a>
                     </div>
                     <p>View and manage existing gym items.</p>
                     <!-- Add gym item viewing functionality here -->
@@ -202,11 +219,11 @@
             </div>
             <div class="flex-item">
                 <div class="card">
-                    <h2>View Slots</h2>
+                    <h2>View Edit & Book Slots</h2>
                     <div class="sub-navbar">
-                        <a href="/slots">View Slots & Book</a>
+                        <a href="/slots">Edit & Book Slots</a>
                     </div>
-                    <p>View, book and manage existing gym slots.</p>
+                    <p>View,Edit, Book and manage existing gym slots.</p>
                     <!-- Add slot viewing functionality here -->
                 </div>
             </div>
@@ -228,6 +245,21 @@
                     </div>
                     <p>Cancel existing bookings.</p>
                     <!-- Add booking cancellation functionality here -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="feedback">
+        <h1>Feedback</h1>
+        <div class="flex-container">
+            <div class="flex-item">
+                <div class="card">
+                    <h2>View Feedback</h2>
+                    <div class="sub-navbar">
+                        <a href="/feedbacks">View Feedback</a>
+                    </div>
+                    <p>View feedback from gym members.</p>
+                    <!-- Add feedback viewing functionality here -->
                 </div>
             </div>
         </div>

@@ -52,6 +52,12 @@ public class GymItemDaoImpl implements GymItemDao {
 		return repository.findTotalSeatById(id);
 	}
 
+	@Override
+	public void updateItem(GymItem gymItem) {
+		repository.save(gymItem);
+		
+	}
+
 	
 	
 

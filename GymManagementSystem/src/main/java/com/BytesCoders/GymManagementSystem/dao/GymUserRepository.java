@@ -12,5 +12,8 @@ public interface GymUserRepository extends JpaRepository<GymUser, String> {
 	Optional<GymUser> findByUsername(String username);
 	
 	@Query("Select username from GymUser where type='Customer'")
+	//public List<GymUser> findAllCustomerUsers();
 	public List<String> findAllCustomerUsers();
+	@Query("Select g from GymUser g where g.type='Customer'")
+	public List<GymUser> findAllCustomer();
 }
